@@ -13,7 +13,7 @@ public static class ConsoleHelper
 /// <para>2. Выводит пустую строку</para>
 /// <para>3. Задержка endDelayMilliseconds</para>
 /// </summary>
-    public static void PrintWithDelay(string text = "", int delayMilliseconds = 10, int endDelayMilliseconds = 100)
+    public static void PrintWithDelay(string text = "", int delayMilliseconds = 10, int endDelayMilliseconds = 20)
     {
         foreach (char c in text)
         {

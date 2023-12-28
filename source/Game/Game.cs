@@ -1,27 +1,27 @@
 /// <summary>
 /// Класс для игры
 /// </summary>
-public class Game
+public partial class Game
 {
 /// <summary>
 /// Количество циклов
 /// </summary>
-    public int CyclesCount;
+    private readonly int CyclesCount;
 
 /// <summary>
 /// Текущий цикл
 /// </summary>
-    public int CurrentCycle = 0;
+    private int CurrentCycle = 0;
 
 /// <summary>
 /// Фонд инвестиций
 /// </summary>
-    readonly InvestmentFund InvestmentFund;
+    readonly private InvestmentFund MyInvestmentFund;
 
 /// <summary>
 /// Список инвестиций
 /// </summary>
-    public List<Investment> Investments;
+    private List<Investment> Investments;
 
 
 /// <summary>
@@ -30,7 +30,7 @@ public class Game
     public Game()
     {
         CyclesCount = 12;
-        InvestmentFund = new InvestmentFund(560000);
+        MyInvestmentFund = new InvestmentFund(560000);
         Investments = new List<Investment>()
         {
             new Stock("Компания №1", 1000, 1000),
@@ -59,7 +59,7 @@ public class Game
     private void CalculateInvestmentReturns()
     {
         ConsoleHelper.PrintWithDelay("Расчитываем доходность инвестиций...");
-        InvestmentFund.CalculateInvestmentReturns();
+        MyInvestmentFund.CalculateInvestmentReturns();
     }
 
 /// <summary>
@@ -70,7 +70,7 @@ public class Game
     private void PayTaxes()
     {
         ConsoleHelper.PrintWithDelay("Платим налоги...");
-        InvestmentFund.PayTaxes();
+        MyInvestmentFund.PayTaxes();
     }
 
 /// <summary>
@@ -83,11 +83,7 @@ public class Game
     private void AccountForNewIncomeAndExpenses()
     {
         ConsoleHelper.PrintWithDelay("Учитываем новые поступления и расходы...");
-        ConsoleHelper.PrintWithDelay("Введите сумму новых поступлений:");
-        decimal newIncome = Convert.ToDecimal(Console.ReadLine());
-        ConsoleHelper.PrintWithDelay("Введите сумму новых расходов:");
-        decimal newExpenses = Convert.ToDecimal(Console.ReadLine());
-        InvestmentFund.AccountForNewIncomeAndExpenses(newIncome, newExpenses);
+        MyInvestmentFund.AccountForNewIncomeAndExpenses();
     }
 
 /// <summary>
@@ -150,7 +146,7 @@ public class Game
             return;
         }
 
-        InvestmentFund.BuyInvestment(investments[option - 1]);
+        MyInvestmentFund.BuyInvestment(investments[option - 1]);
     }
 
 /// <summary>
@@ -208,7 +204,7 @@ public class Game
             return;
         }
 
-        InvestmentFund.SellInvestment(investments[option - 1]);
+        MyInvestmentFund.SellInvestment(investments[option - 1]);
     }
 
 /// <summary>
@@ -229,7 +225,7 @@ public class Game
             ConsoleHelper.PrintWithDelay("Выберите действие:");
             ConsoleHelper.PrintWithDelay("1. Купить инвестиции");
             ConsoleHelper.PrintWithDelay("2. Продать инвестиции");
-            ConsoleHelper.PrintWithDelay("0. Отмена");
+            ConsoleHelper.PrintWithDelay("0. Конец реструктуризации");
 
             int option = ConsoleHelper.ChoiceNumber(2);
             if (option == 0)
@@ -258,11 +254,14 @@ public class Game
 /// <para>3. Выплата налогов</para>
 /// <para>4. Учет новых поступлений и расходов</para>
 /// <para>5. Реструктуризация портфеля</para>
-/// <para>6. Переход к следующему циклу</para>
+/// <para>6. Обновление внешней конъюнктуры</para>
+/// <para>7. Переход к следующему циклу</para>
 /// </summary>
     private void Cycle()
     {
         ConsoleHelper.PrintWithDelay($"Начинаем цикл {CurrentCycle + 1} из {CyclesCount}...");
+
+        ExternalConditions.UpdateInvestment(Investments);
 
         CalculateInvestmentReturns();
         ConsoleHelper.PrintWithDelay();
